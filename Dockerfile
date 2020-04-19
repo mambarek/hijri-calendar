@@ -1,2 +1,5 @@
 FROM nginx:alpine
-COPY . /usr/share/nginx/html
+WORKDIR /usr/share/nginx/html
+COPY assets ./assets
+COPY index.html ./
+COPY prayerTime.html ./
