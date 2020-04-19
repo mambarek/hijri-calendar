@@ -9,7 +9,18 @@ var msecPerMinute = 1000 * 60;
 var msecPerHour = msecPerMinute * 60;
 var msecPerDay = msecPerHour * 24;
 var selectedMonth = "1";
+var selectedAthan = "Makkah.mp3";
+var athanPth = "assets/athan/";
 
+function changeAthan(){
+    selectedAthan = $("#athan-selection").val();
+
+    var audio = $("#athanPlayer");
+    audio.attr("src", athanPth + selectedAthan);
+    audio[0].pause();
+    audio[0].load();
+    audio[0].play();
+}
 function changeMonth(){
     selectedMonth = $("#month-selection").val();
     fillGrid();
@@ -24,7 +35,12 @@ function getCurrentDateTimeFrom(timeString){
 }
 
 function playAdhan(){
-    document.getElementById('adhanAudio').play();
+    var audio = $("#athanPlayer");
+    audio.attr("src", athanPth + selectedAthan);
+    audio[0].pause();
+    audio[0].load();
+    audio[0].play();
+    $("#athanPlayer")[0].play();
 }
 
 function setTimerToDate(targetDate, selector){
