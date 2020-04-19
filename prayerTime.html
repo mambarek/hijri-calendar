@@ -1,9 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+	<link rel="apple-touch-icon" sizes="57x57" href="assets/favicons/apple-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="assets/favicons/apple-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="assets/favicons/apple-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="assets/favicons/apple-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="assets/favicons/apple-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="assets/favicons/apple-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="assets/favicons/apple-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="assets/favicons/apple-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="192x192"  href="assets/favicons/android-icon-192x192.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="assets/favicons/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="assets/favicons/favicon-16x16.png">
+	<link rel="manifest" href="assets/favicons/manifest.json">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="assets/favicons/ms-icon-144x144.png">
+	<meta name="theme-color" content="#ffffff">
     <meta charset="utf-8" />
-    <title>Ramadhan 2019</title>
+    <title>Hijri Calendar</title>
     <!-- The jQuery library is a prerequisite for all jqSuite products -->
     <script type="text/ecmascript" src="./assets/extern/jquery-3.3.1/jquery-3.3.1.js"></script>
     <script type="text/ecmascript" src="./assets/extern/jquery-ui-1.12.1/jquery-ui.js"></script>
@@ -27,12 +43,7 @@
  --->
     <!-- The link to the CSS that the grid needs -->
     <link rel="stylesheet" type="text/css" media="screen" href="./assets/extern/jqGrid/css/trirand/ui.jqgrid-bootstrap4.css" />
-	<script>
-		$.jgrid.defaults.width = 1000;
-		$.jgrid.defaults.responsive = true;
-		$.jgrid.defaults.styleUI = 'Bootstrap4';
-		$.jgrid.defaults.iconSet = "Octicons";
-	</script>
+
 	<!--
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
  -->
@@ -44,6 +55,7 @@
 {
 	font-size:0.8rem
 }
+.ui-jqgrid-bdiv{ width: 100%}
 .testClass {
     background: yellow;
 }
@@ -57,327 +69,61 @@
 </head>
 <body>
 
-<div style="float:left;margin-left:20px;margin-top:20px">
-    <div style="margin-top: 20px;width: 75% ">
-    <table id="jqGrid" ></table>
-    <div id="jqGridPager"></div>
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="col-2">
+            <div class="form-group">
+                <label for="month-selection" class="font-weight-bold">Month Hijri</label>
+                <select id="month-selection" onchange="changeMonth()" class="form-control">
+                    <option value="1">Muḥarram</option>
+                    <option value="2">Ṣafar</option>
+                    <option value="3">Rabī‘ al-awwal‎</option>
+                    <option value="4">Rabī‘ ath-thānī </option>
+                    <option value="5">Jumādá al-ūlá</option>
+                    <option value="6">Jumādá al-ākhirah</option>
+                    <option value="7">Rajab</option>
+                    <option value="8">Sha‘bān</option>
+                    <option value="9">Ramaḍān</option>
+                    <option value="10">Shawwāl</option>
+                    <option value="11">Dhū al-Qa‘dah</option>
+                    <option value="12">Dhū al-Ḥijjah</option>
+                </select>
+            </div>
+        </div>
     </div>
+    <div class="row mt-2">
+        <div class="col-10">
+            <table id="jqGrid" style="width: 100%" ></table>
+            <div id="jqGridPager"></div>
+        </div>
 
+        <div class="col-2">
+            <div style="height: 100px;width: 100%;margin-bottom: 50px">
+                <p style="border-bottom: 1px solid;color: brown;"><span style="font-weight: 700;">Remain time to Salat</span></p>
+                <span id="nextSalatCounter" style="height: 100%;font-size: 3rem;color: brown;"></span>
+                <audio id="adhanAudio" preload="auto" controls style="display: none">
+                    <source src="Adhan_Makkah.mp3" type="audio/mpeg" /><!-- .../ = Pfadangabe hier nur gekürzt -->
+                </audio>
+            </div>
+            <table id="dayTable" style="width: 150px">
+                <thead>
+                    <tr style="border-bottom: 1px solid;">
+                        <th>Salat</th>
+                        <th>Adhan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+            <div style="height: 100px;width: 100%;margin-top: 50px">
+                <p style="border-bottom: 1px solid;color: #0c5460;"><span style="font-weight: 700;">Remain time to Iftar</span></p>
+                <span id="maghribCounter" style="height: 100%;font-size: 4rem;color: #0c5460"></span>
+            </div>
+        </div>
+    </div>
 </div>
 
-    <div style="width:300px;float: right;margin-top: 50px;margin-right: 50px;">
-        <div style="height: 100px;width: 100%;margin-bottom: 50px">
-            <p style="border-bottom: 1px solid;color: brown;"><span style="font-weight: 700;">Remain time to Salat</span></p>
-            <span id="nextSalatCounter" style="height: 100%;font-size: 3rem;color: brown;"></span>
-            <audio id="adhanAudio" preload="auto" controls style="display: none">
-                <source src="Adhan_Makkah.mp3" type="audio/mpeg" /><!-- .../ = Pfadangabe hier nur gekürzt -->
-            </audio>
-        </div>
-        <table id="dayTable" style="width: 150px">
-            <thead>
-                <tr style="border-bottom: 1px solid;">
-                    <th>Salat</th>
-                    <th>Adhan</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-
-        <div style="height: 100px;width: 100%;margin-top: 50px">
-            <p style="    border-bottom: 1px solid;color: #0c5460;"><span style="font-weight: 700;">Remain time to Iftar</span></p>
-            </span><span id="maghribCounter" style="height: 100%;font-size: 4rem;color: #0c5460"></span>
-        </div>
-    </div>
-
-
-    <script type="text/javascript">
-
-        var cachedDayData;
-
-        // Set the unit values in milliseconds.
-        var msecPerMinute = 1000 * 60;
-        var msecPerHour = msecPerMinute * 60;
-        var msecPerDay = msecPerHour * 24;
-
-        function getCurrentDateTimeFrom(timeString){
-            var arr = timeString.split(":");
-            var hours = arr[0];
-            var minutes = arr[1];
-            var now = new Date();
-            return now.setHours(hours, minutes, 0);
-        }
-
-        function playAdhan(){
-            document.getElementById('adhanAudio').play();
-        }
-
-        function setTimerToDate(targetDate, selector){
-            var interval = -1;
-            var counter = setInterval(function (args) {
-                // Get the difference in milliseconds.
-                interval = targetDate - new Date();
-
-                 if(interval < 0) {
-                    clearInterval(counter);
-                    return;
-                }
-
-                var hours = Math.floor(interval / msecPerHour );
-                interval = interval - (hours * msecPerHour );
-
-                var minutes = Math.floor(interval / msecPerMinute );
-                interval = interval - (minutes * msecPerMinute );
-
-                var seconds = Math.floor(interval / 1000 );
-                var min = minutes < 10 ? "0"+ minutes: minutes;
-                var sec = seconds < 10 ? "0"+ seconds: seconds;
-                $(selector).html(hours+":"+min+":"+sec);
-                if(hours+":"+min+":"+sec == "0:00:00") {
-                    console.info("Yes ist gleich " + hours+":"+min+":"+sec);
-                    // wait one second and refresh tabel
-                    setTimeout(function() {
-                        // empty table
-                        $('#dayTable > tbody > tr').remove();
-                        // redraw it again
-                        fillDayTable(cachedDayData);
-                    }, 1000);
-
-                    playAdhan();
-                }
-            }, 1000);
-        }
-
-        function fillDayTable(data){
-
-            var found = false;
-            var fajrDate = getCurrentDateTimeFrom(data.data.timings.Fajr);
-            var dhuhrDate = getCurrentDateTimeFrom(data.data.timings.Dhuhr);
-            var asrDate = getCurrentDateTimeFrom(data.data.timings.Asr);
-            var maghribDate = getCurrentDateTimeFrom(data.data.timings.Maghrib);
-            var ishaDate = getCurrentDateTimeFrom(data.data.timings.Isha);
-
-            var table = $('#dayTable');
-            var interval = fajrDate - new Date();
-            if(interval > 0) {
-                found = true;
-                setTimerToDate(fajrDate,"#nextSalatCounter");
-                table.append("<tr style='background: brown;color: white;'><td>Fajr</td><td>" + data.data.timings.Fajr + "</td></tr>");
-            }
-            else
-                table.append("<tr><td>Fajr</td><td>" + data.data.timings.Fajr + "</td></tr>");
-
-
-            interval = dhuhrDate - new Date();
-            if(!found && interval > 0) {
-                found = true;
-                setTimerToDate(dhuhrDate,"#nextSalatCounter");
-                table.append("<tr style='background: brown;color: white;'><td>Dhuhr</td><td>" + data.data.timings.Dhuhr + "</td></tr>");
-            }
-            else
-                table.append("<tr><td>Dhuhr</td><td>" + data.data.timings.Dhuhr + "</td></tr>");
-
-            interval = asrDate - new Date();
-            if(!found && interval > 0) {
-                found = true;
-                setTimerToDate(asrDate,"#nextSalatCounter");
-                table.append("<tr style='background: brown;color: white;'><td>Asr</td><td>" + data.data.timings.Asr + "</td></tr>");
-            }
-            else
-                table.append("<tr><td>Asr</td><td>" + data.data.timings.Asr + "</td></tr>");
-
-            interval = maghribDate - new Date();
-            if(!found && interval > 0) {
-                found = true;
-                setTimerToDate(maghribDate,"#nextSalatCounter");
-                table.append("<tr style='background: brown;color: white;'><td>Maghrib</td><td>" + data.data.timings.Maghrib + "</td></tr>");
-            }
-            else
-                table.append("<tr><td>Maghrib</td><td>" + data.data.timings.Maghrib + "</td></tr>");
-
-            interval = ishaDate - new Date();
-            if(!found && interval > 0) {
-                found = true;
-                setTimerToDate(ishaDate,"#nextSalatCounter");
-                table.append("<tr style='background: brown;color: white;'><td>Isha</td><td>" + data.data.timings.Isha + "</td></tr>");
-            }
-            else
-                table.append("<tr><td>Isha</td><td>" + data.data.timings.Isha + "</td></tr>");
-        }
-
-
-        var dayUrl = 'http://api.aladhan.com/v1/timingsByCity?city=kaiserslautern&country=de&method=2';
-        xhrGet(dayUrl).then(function(data) {
-            cachedDayData = data;
-            var maghrib = data.data.timings.Maghrib.split(" ")[0];
-
-            var maghribDate = getCurrentDateTimeFrom(maghrib);
-            setTimerToDate(maghribDate,"#maghribCounter");
-            fillDayTable(data);
-        });
-
-        function formatNowCell  (rowId, cellvalue, rawObject, cm, rdata){
-            var now = new Date();
-            var date = new Date(rawObject.date.readable);
-            //if(rowObject.date.gregorian.day == now.getDate()) {
-            //if(rdata.date.date.startsWith(now.getDate())) {
-            //if(now.getTime() == date.getTime()) {
-            if(now.getDate() == date.getDate() && now.getMonth() == date.getMonth() && now.getFullYear() == date.getFullYear()){
-                //if(options.colModel.name == "Maghrib" ) {
-                return 'class=\"nowCell\"';
-            }
-
-            return null;
-        }
-
-        function formatDayNowCell  (rowId, cellvalue, rawObject, cm, rdata){
-            var now = new Date();
-            var date = new Date(rawObject.date.readable);
-            //if(rowObject.date.gregorian.day == now.getDate()) {
-            //if(rdata.date.date.startsWith(now.getDate())) {
-            //if(now.getTime() == date.getTime()) {
-            if(now.getDate() == date.getDate() && now.getMonth() == date.getMonth() && now.getFullYear() == date.getFullYear()){
-                //if(options.colModel.name == "Maghrib" ) {
-                return 'class=\"nowCell\"';
-            }
-
-            return null;
-        }
-
-        function formatMaghribCell  (rowId, cellvalue, rawObject, cm, rdata){
-            var now = new Date();
-            var date = new Date(rawObject.date.readable);
-            //if(rowObject.date.gregorian.day == now.getDate()) {
-            if(now.getDate() == date.getDate() && now.getMonth() == date.getMonth() && now.getFullYear() == date.getFullYear()){
-                //if(options.colModel.name == "Maghrib" ) {
-                return 'class=\"testClass\"';
-            }
-
-            if(cm.name == "Maghrib" ) {
-                return 'class=\"maghribCell\"';
-            }
-
-            return null;
-        }
-
-        function formatTime  (cellvalue, options, rowObject)
-        {
-            var now = new Date();
-            var value =  cellvalue.split(" ")[0];
-
-            /*if(rowObject.date.gregorian.day == now.getDate()){
-                if(options.colModel.name == "Maghrib" ) {
-                    return "<div style=\"height:2.7rem;padding-top: 10px;width:100%;background-color: #4eb305\"><span style=\"font-weight:600;color:green\">" + value + "</span></div>";
-                }
-                else
-                    return "<span style=\"color:red\">"+value+"</span>";
-            }*/
-
-            return value;
-        }
-
-        function dateFormatter (cellvalue, options, rowObject)
-        {
-            var now = new Date();
-            var value =  cellvalue;
-
-            /*if(rowObject.date.gregorian.day == now.getDate())
-                return "<span style=\"font-weight:700\">"+value+"</span>";*/
-
-            return "<span>"+ cellvalue.day + " " + cellvalue.month.en + " " + cellvalue.year + "</span>";
-        }
-
-        function hijriFormatter (cellvalue, options, rowObject)
-        {
-            return "<span dir=\"rtl\">"+cellvalue.weekday.ar + ", " + cellvalue.day + " " + cellvalue.month.ar + " " + cellvalue.year + "</span>";
-        }
-
-        function dayFormatter (cellvalue, options, rowObject){
-            return cellvalue.weekday.en;
-        }
-// formatCol = function (pos, rowInd, tv, rawObject, rowId, rdata)
-        function createGrid(data, rowsPerPage){
-            $("#jqGrid").jqGrid({
-                datatype: "local",
-                data: data,
-                colModel: [
-                    { label: 'Day', name: 'day', jsonmap: 'date.gregorian', formatter: dayFormatter,cellattr : formatDayNowCell,   width: 100},
-                    { label: 'Date', name: 'date', jsonmap: 'date.gregorian', formatter: dateFormatter, cellattr : formatNowCell, width: 100},
-                    { label: 'Hijri', name: 'hijri',jsonmap:'date.hijri', formatter: hijriFormatter, cellattr : formatNowCell, width: 160},
-                    { label: 'Fajr', name: 'Fajr', jsonmap: 'timings.Fajr', width: 80, formatter: formatTime, cellattr : formatNowCell , align: "center"},
-                    { label: 'Sunrise', name: 'Sunrise', jsonmap: 'timings.Sunrise', width: 80, formatter: formatTime, cellattr : formatNowCell , align: "center" },
-                    { label: 'Dhuhr', name: 'Dhuhr', jsonmap: 'timings.Dhuhr', width: 80, formatter: formatTime, cellattr : formatNowCell , align: "center"},
-                    { label: 'Asr', name: 'Asr', jsonmap: 'timings.Asr', width: 80, formatter: formatTime, cellattr : formatNowCell , align: "center" },
-                    { label: 'Sunset', name: 'Sunset', jsonmap: 'timings.Sunset', width: 80, formatter: formatTime, cellattr : formatNowCell , align: "center"},
-                    { label: 'Maghrib', name: 'Maghrib', jsonmap: 'timings.Maghrib', width: 90, formatter: formatTime, cellattr  : formatMaghribCell , align: "center"},
-                    { label: 'Isha', name: 'Isha', jsonmap: 'timings.Isha', width: 80, formatter: formatTime, cellattr : formatNowCell , align: "center"},
-                    { label: 'Imsak', name: 'Imsak', jsonmap: 'timings.Imsak', width: 80, formatter: formatTime, cellattr : formatNowCell , align: "center"},
-                    { label: 'Midnight', name: 'Midnight', jsonmap: 'timings.Midnight', width: 120, formatter: formatTime, cellattr : formatNowCell , align: "center"}
-                ],
-
-                //altRows : true,
-                rownumbers : true,
-                colMenu : true,
-                menubar: true,
-                //viewrecords : true,
-                hoverrows : true,
-                height: '100%',
-                width: 1200,
-                rowNum: rowsPerPage,
-                records: 31,
-                caption : 'Prayer time',
-                sortable: true,
-                //altRows: true, This does not work in boostrarap
-                // altclass: '....'
-                pager: "#jqGridPager",
-                // set table stripped class in table style in bootsrap
-
-            });
-        }
-
-        $(document).ready(function () {
-            const todayHijri = HijriJS.today();
-            var url = new URL(location.href);
-            var method = url.searchParams.get("m");
-            console.log(method);
-            if(!method) method = 2;
-        //var url = 'http://api.aladhan.com/v1/calendarByCity?city=Kaiserslautern&country=de&method=2&month=05&year=2019';
-        var aladhanUrl = 'http://api.aladhan.com/v1/hijriCalendarByCity?city=Kaiserslautern&country=de&method=' + method +'&month=' +
-            todayHijri.month +'&year=' + todayHijri.year;
-
-
-        xhrGet(aladhanUrl).then(function(data) {
-            var items = data.data;
-            var rowsPerPage = 10;
-            createGrid(items, rowsPerPage);
-
-            var now = new Date();
-            var nowIndex=0;
-            for(var i=0; i< items.length; i++) {
-                var item = items[i];
-                var date = new Date(item.date.readable);
-                //if (item.date.gregorian.date.startsWith(now.getDate())) {
-                if(now.getDate() == date.getDate() && now.getMonth() == date.getMonth() && now.getFullYear() == date.getFullYear()){
-                    nowIndex = i;
-                    break;
-                }
-            }
-
-            // round it to next integer
-            var selectedPage = Math.ceil(nowIndex / rowsPerPage);
-            //set page
-            $('#jqGrid').jqGrid('setGridParam', {page: selectedPage});
-
-            //refresh grid
-            $('#jqGrid').trigger( 'reloadGrid' );
-
-            });
-
-        });
-
-    </script>
-
-    
-	
+<script src="assets/js/prayerTime.js"></script>
 </body>
 </html>

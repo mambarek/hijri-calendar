@@ -1,6 +1,6 @@
 version: '3'
 services:
-    web:
-        build: .
+    hijri-calendar:
+        image: mmbarek/hijri-calendar:v4.2
         ports:
             - "5555:80"
